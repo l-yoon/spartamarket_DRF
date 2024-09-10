@@ -41,25 +41,25 @@ class LoginView(APIView):
         return Response(res_data) 
 
 #로그아웃
-# class LogoutView(APIView):
-#     permission_classes = [IsAuthenticated]
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
     
-#     def post(self, request):
-#         refresh_token = request.data["refresh_token"]
+    def post(self, request):
+        refresh_token = request.data["refresh_token"]
         
-#         try:
-#             token = RefreshToken(refresh_token)
-#         except TokenError:
-#             return Response( {"error": "token이 없습니다"}, status=400)
+        try:
+            token = RefreshToken(refresh_token)
+        except TokenError:
+            return Response( {"error": "token이 없습니다"}, status=400)
         
-#         token.blacklist()
-#         return Response(status=200)
+        token.blacklist()
+        return Response(status=200)
 
 #프로필 조회
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
-        user = get_object_or_404(User, username=username)
+        user = User.objects.get(username=username)
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
